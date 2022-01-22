@@ -96,11 +96,11 @@ lua_to_elisp(emacs_env *env, lua_State *ls, int index)
 	case LUA_TTHREAD:
 	default: {
 		emacs_value Ferror = env->intern(env, "error");
-		const char *errmsg = "Sorry not supported type!!";
+		char errmsg[] = "Sorry not supported type!!";
 		emacs_value err_args[] = {
-			env->make_string(env, errmsg, sizeof(errmsg)),
+			env->make_string(env, errmsg, sizeof(errmsg) - 1),
 		};
-		return env->funcall(env, Ferror, 2, err_args);
+		return env->funcall(env, Ferror, 1, err_args);
 	}
 	}
 }
@@ -134,11 +134,11 @@ elisp_to_lua(emacs_env *env, lua_State *ls, emacs_value v)
 		lua_pushboolean(ls, 1);
 	} else {
 		emacs_value Ferror = env->intern(env, "error");
-		const char *errmsg = "Sorry not supported type!!";
+		const char errmsg[] = "Sorry not supported type!!";
 		emacs_value err_args[] = {
-			env->make_string(env, errmsg, sizeof(errmsg)),
+			env->make_string(env, errmsg, sizeof(errmsg) - 1),
 		};
-		env->funcall(env, Ferror, 2, err_args);
+		env->funcall(env, Ferror, 1, err_args);
 	}
 }
 
