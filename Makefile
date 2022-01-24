@@ -21,7 +21,7 @@ lua-core.o: lua-core.c
 clean:
 	-rm -f lua-core.so lua-core.o
 
-test:
+test: lua-core.so
 	$(EMACS) -Q -batch -L . $(LOADPATH) \
 		-l test/test.el \
 		-f ert-run-tests-batch-and-exit
