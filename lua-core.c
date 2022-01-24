@@ -111,6 +111,24 @@ eq_type(emacs_env *env, emacs_value type, const char *type_str)
 	return env->eq(env, type, env->intern(env, type_str));
 }
 
+static int
+emacs_message(lua_State *ls) {
+	lua_getglobal(ls, "emacs_env");
+	emacs_env *env = lua_touserdata(ls, -1);
+
+	int n = lua_gettop(ls);
+	emacs_value *args = malloc(sizeof(emacs_value) * (n - 1));
+	for (int i = n - 1; i >= 1; --i) {
+		args[i - 1] = lua_to_elisp(env, ls, i);
+	}
+
+	emacs_value Fmessage = env->intern(env, "message");
+	env->funcall(env, Fmessage, n - 1, args);
+
+	free(args);
+	return 0;
+}
+
 static void
 elisp_to_lua(emacs_env *env, lua_State *ls, emacs_value v)
 {
@@ -158,6 +176,14 @@ Flua_do_string(emacs_env *env, ptrdiff_t nargs, emacs_value args[], void *data )
 	if (code_buf == NULL)
 		return Qnil;
 	env->copy_string_contents(env, code, code_buf, &size);
+
+	lua_pushcfunction(ls, emacs_message);
+	lua_setglobal(ls, "message");
+	lua_pop(ls, -1);
+
+	lua_pushlightuserdata(ls, env);
+	lua_setglobal(ls, "emacs_env");
+	lua_pop(ls, -1);
 
 	int ret = luaL_dostring(ls, code_buf);
 	if (ret != 0) {
