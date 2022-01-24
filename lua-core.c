@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2016 by Syohei YOSHIDA
+  Copyright (C) 2022 by Shohei YOSHIDA
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
