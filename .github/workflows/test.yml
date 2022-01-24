@@ -20,7 +20,7 @@ jobs:
 
     - uses: actions/checkout@v1
     - name: Install dependencies
-      run: sudo apt install emacs-nox liblua5.2-dev
+      run: sudo apt install emacs-nox liblua5.2-0 liblua5.2-dev
     - name: Run tests
       run: |
         make clean
