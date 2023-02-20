@@ -30,8 +30,19 @@ int plugin_is_GPL_compatible;
 static void
 lua_free(void *arg)
 {
-	lua_State *ls = (lua_State*)arg;
+	if (arg) {
+		lua_State *ls = (lua_State*)arg;
+		lua_close(ls);
+	}
+}
+
+static emacs_value
+Flua_close(emacs_env *env, ptrdiff_t nargs, emacs_value args[], void *data)
+{
+	lua_State *ls = env->get_user_ptr(env, args[0]);
 	lua_close(ls);
+	env->set_user_ptr(env, args[0], NULL);
+	return env->intern(env, "nil");
 }
 
 static emacs_value
@@ -264,6 +275,7 @@ emacs_module_init(struct emacs_runtime *ert)
 	bind_function (env, lsym, env->make_function(env, amin, amax, csym, doc, data))
 
 	DEFUN("lua-core-init", Flua_init, 0, 0, "Initialize lua state", NULL);
+	DEFUN("lua-core-close", Flua_close, 1, 1, "Close lua state", NULL);
 	DEFUN("lua-core-do-string", Flua_do_string, 2, 2, "Eval string as Lua code", NULL);
 	DEFUN("lua-core-get-global", Flua_get_global, 2, 2, "Get lua value as Emacs Lisp value", NULL);
 	DEFUN("lua-core-set-global", Flua_set_global, 3, 3, "Set Emacs Lisp value to lua environment", NULL);

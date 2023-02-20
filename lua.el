@@ -29,6 +29,9 @@
 (defun lua-new ()
   (lua-core-init))
 
+(defun lua-close (state)
+  (lua-core-close state))
+
 (defun lua-do-string (state str)
   (lua-core-do-string state str))
 
