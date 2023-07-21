@@ -197,6 +197,7 @@ Flua_do_string(emacs_env *env, ptrdiff_t nargs, emacs_value args[], void *data )
 	lua_pop(ls, -1);
 
 	int ret = luaL_dostring(ls, code_buf);
+	free(code_buf);
 	if (ret != 0) {
 		return Qnil;
 	}
@@ -241,6 +242,7 @@ Flua_set_global(emacs_env *env, ptrdiff_t nargs, emacs_value args[], void *data 
 
 	elisp_to_lua(env, ls, val);
 	lua_setglobal(ls, key_buf);
+	free(key_buf);
 
 	return val;
 }
